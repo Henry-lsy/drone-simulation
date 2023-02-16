@@ -1,12 +1,14 @@
 #pragma once
-#include <Eigen/Geometry>
-#include "type"
+#include <Eigen/Dense>
+#include "type.h"
 
 class RigidBody
 {
 public:
-    RigidBody(double mass, Eigen::matrix3d inertia):_mass(mass), _inertia(inertia)
+    RigidBody() = default;
+    RigidBody(double mass, Eigen::Matrix3d inertia):_mass(mass), _inertia(inertia)
     {}
+    virtual ~RigidBody() = default;
 
     void compute();
     void setState(const State & state){ _state = state; }
@@ -24,5 +26,10 @@ public:
 private:
     double _mass;
     Eigen::Matrix3d _inertia;
+
+protected:
+    Eigen::Vector3d _total_force;
+    Eigen::Vector3d _total_torque;
+
     State _state;
 };

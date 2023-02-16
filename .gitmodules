@@ -1,0 +1,3 @@
+[submodule "3rdparty/quadrotor_msgs"]
+	path = 3rdparty/quadrotor_msgs
+	url = git@github.com:Henry-lsy/quadrotor_msgs.git

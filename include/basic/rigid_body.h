@@ -2,6 +2,8 @@
 #include <Eigen/Dense>
 #include "type.h"
 
+typedef boost::array<double, 22> InternalState;
+
 class RigidBody
 {
 public:
@@ -23,13 +25,14 @@ public:
     Eigen::Vector3d getAngularVelocity(){ return _state.angular_velocity; }
     Eigen::Vector3d getAngularAcceleration(){ return _state.angular_acceleration; }
 
-private:
+protected:
     double _mass;
     Eigen::Matrix3d _inertia;
-
-protected:
     Eigen::Vector3d _total_force;
     Eigen::Vector3d _total_torque;
 
     State _state;
+
+private:
+    InternalState _internal_state;
 };

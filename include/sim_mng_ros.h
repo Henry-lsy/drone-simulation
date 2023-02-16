@@ -29,45 +29,45 @@ public:
     }
     
     void initDrone(std::string config_path)
-    {
+    { 
         _config_path = config_path;
-        
-        _drone.init(config_path);
+        // drone should be initialied properly!
+        _drone->init(config_path);
     }
 
     void process()
     {
-        _drone.simulationOnce();
+        _drone->simulationOnce();
         publishImu();
         publishOdom();
     }
 
     void cmdCallback(const quadrotor_msgs::PositionCommand::ConstPtr& cmd)
     {
-        // _drone.setCmd();
+        // _drone_ptr->setCmd();
     }
 private:
     void forceDisturbanceCallback(const geometry_msgs::Vector3::ConstPtr& force)
     {
-        // _drone.setExtraForce(force);
+        // _drone_ptr->setExtraForce(force);
     }
 
     void torqueDisturbanceCallback(const geometry_msgs::Vector3::ConstPtr& torque)
     {
-        // _drone.setExtraTorque(torque);
+        // _drone_ptr->setExtraTorque(torque);
     }
 
     void publishOdom()
     {
         nav_msgs::Odometry odom_data;
-        // odom_data = _drone.getOdom();
+        // odom_data = _drone_ptr->getOdom();
         _odom_pub.publish(odom_data);
     }
 
     void publishImu()
     {
         sensor_msgs::Imu imu_data;
-        // imu_data = _drone.getImu();
+        // imu_data = _drone_ptr->getImu();
         _imu_pub.publish(imu_data);
     }
 
@@ -79,5 +79,5 @@ private:
     ros::Subscriber _torque_disturbance_sub;
     
     std::string _config_path;
-    Drone _drone;  // can be generate to class Drone later
+    Drone* _drone;
 };

@@ -1,3 +1,9 @@
 [submodule "3rdparty/quadrotor_msgs"]
 	path = 3rdparty/quadrotor_msgs
 	url = git@github.com:Henry-lsy/quadrotor_msgs.git
+[submodule "3rdparty/yaml-cpp"]
+	path = 3rdparty/yaml-cpp
+	url = git@github.com:jbeder/yaml-cpp.git
+[submodule "3rdparty/odeint-v2"]
+	path = 3rdparty/odeint-v2
+	url = git@github.com:headmyshoulder/odeint-v2.git

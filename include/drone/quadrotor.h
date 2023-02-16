@@ -16,6 +16,7 @@ public:
     void computeTorque() override;
     
 private:
-    std::vector<Motor> motor;
-    double arm_length;                             
+    const int _rotor_num = 4;
+    std::vector<Motor> _motors;
+    double _arm_length;                             
 };

@@ -4,7 +4,9 @@
 
 mass        : 1.2 # kg 
 gravity     : 9.81 
-inertial    : [[1,0,0],[0,1,0],[0,0,1]]
+inertial    : [1, 0, 0,
+               0, 1, 0,
+               0, 0, 1]
 
 ctrl_freq_max   : 100.0
 use_bodyrate_ctrl: false

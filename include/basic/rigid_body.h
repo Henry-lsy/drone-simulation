@@ -25,6 +25,10 @@ public:
     Eigen::Vector3d getAngularVelocity(){ return _state.angular_velocity; }
     Eigen::Vector3d getAngularAcceleration(){ return _state.angular_acceleration; }
 
+    // used for change structure or add other payload directly.
+    void setMass(double mass){ _mass = mass; }
+    void setInertia(const Eigen::Matrix3d & inertia) { _inertia = inertia; }
+
 protected:
     double _mass;
     Eigen::Matrix3d _inertia;

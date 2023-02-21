@@ -3,8 +3,8 @@
 class Motor
 {
 public:
-    double getForce(const double& rpm);
-    double getTorque(const double& rpm);
+    double getForce();
+    double getTorque();
 
 private:
     double _rpm;

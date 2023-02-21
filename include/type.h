@@ -13,6 +13,7 @@ struct State
     Eigen::Vector3d jerk;
     Eigen::Vector3d snap;
 
+    Eigen::Matrix3d R;
     Eigen::Quaterniond orientation;
     Eigen::Vector3d angular_velocity;
     Eigen::Vector3d angular_acceleration;

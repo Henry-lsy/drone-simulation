@@ -1,11 +1,11 @@
 #include "motor.h"
 
-double Motor::getForce(const double& rpm)
+double Motor::getForce()
 {
-    return _thrust_coefficient * rpm * rpm;
+    return _thrust_coefficient * _rpm * _rpm;
 }
 
-double Motor::getTorque(const double& rpm)
+double Motor::getTorque()
 {
-    return _torque_coefficient * rpm * rpm;
+    return _torque_coefficient * _rpm * _rpm;
 }

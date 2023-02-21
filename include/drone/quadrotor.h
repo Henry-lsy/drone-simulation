@@ -12,11 +12,11 @@ public:
     // Quadrotor() = default;
     void init(const std::string & config_path) override;
 
-    void computeForce() override;
-    void computeTorque() override;
+    void computeTotalForce() override;
+    void computeTotalTorque() override;
     
 private:
     const int _rotor_num = 4;
-    std::vector<Motor> _motors;
+    std::vector<Motor> _motor;
     double _arm_length;                             
 };

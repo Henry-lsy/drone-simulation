@@ -11,20 +11,20 @@ void Quadrotor::init(const std::string& config_path)
 
 }
 
-void Quadrotor::computeForce()
+void Quadrotor::computeTotalForce()
 {
-
+  // Eigen::Vector3d force
 }
 
-void Quadrotor::computeTorque()
+void Quadrotor::computeTotalTorque()
 {
-  Eigen::Vector3d moments;
-  moments(0) = kf_ * (motor_rpm_sq(2) - motor_rpm_sq(3)) * arm_length_;
-  moments(1) = kf_ * (motor_rpm_sq(1) - motor_rpm_sq(0)) * arm_length_;
-  moments(2) = km_ * (motor_rpm_sq(0) + motor_rpm_sq(1) - motor_rpm_sq(2) -
-                      motor_rpm_sq(3));
+  Eigen::Vector3d torque;
+  torque(0) = (_motor[2].getForce() - _motor[3].getForce()) * _arm_length;
+  torque(1) = (_motor[1].getForce() - _motor[0].getForce()) * _arm_length;
+  torque(2) = _motor[0].getTorque() + _motor[1].getTorque()
+              - _motor[2].getTorque() - _motor[3].getTorque();
 
-  double resistance = 0.1 *                                        // C
-                      3.14159265 * (arm_length_) * (arm_length_) * // S
-                      cur_state.v.norm() * cur_state.v.norm();
+  // double resistance = 0.1 *                                        // C
+  //                     3.14159265 * (_arm_length) * (_arm_length) * // S
+  //                     cur_state.v.norm() * cur_state.v.norm();
 }

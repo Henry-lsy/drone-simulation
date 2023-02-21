@@ -8,9 +8,9 @@ public:
     Motor(const double & kf, const double & km):
         _kf(kf), _km(km)
     {}
-    void setKf(double kf)( _kf = kf; )
-    void setKm(double km)( _km = km; )
-    
+    void setKf(double kf){ _kf = kf; }
+    void setKm(double km){ _km = km; }
+
     double getForce();
     double getTorque();
 

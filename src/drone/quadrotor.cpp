@@ -2,12 +2,21 @@
 #include "quadrotor.h"
 #include <Eigen/Core>
 
-void Quadrotor::init(const std::string& config_path)
+void Quadrotor::init(const std::string& config_path): 
 {
     YAML::Node config = YAML::LoadFile(config_path);
 
     _mass = config["mass"].as<double>();
     _inertia = Eigen::Map<Eigen::Matrix3d>(config["inertial"].as<std::vector<double>>().data());
+
+    double kf = config["kf"].as<double>();
+    double km = config["km"].as<double>();
+
+    for(int i=0; i<_motor_num; i++)
+    {
+      _motor[i].setKf(kf);
+      _motor[i].setKm(km);
+    }
 
 }
 

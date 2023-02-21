@@ -2,10 +2,10 @@
 
 double Motor::getForce()
 {
-    return _thrust_coefficient * _rpm * _rpm;
+    return _kf * _rpm * _rpm;
 }
 
 double Motor::getTorque()
 {
-    return _torque_coefficient * _rpm * _rpm;
+    return _km * _rpm * _rpm;
 }

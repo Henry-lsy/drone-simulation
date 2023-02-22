@@ -55,7 +55,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node src/drone_simulation_node.cpp
-  src/basic/drone.cpp
+  # src/basic/drone.cpp
   src/basic/motor.cpp
   src/basic/rigid_body.cpp
   src/drone/quadrotor.cpp)

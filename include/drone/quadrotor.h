@@ -14,7 +14,8 @@ public:
 
     void computeTotalForce() override;
     void computeTotalTorque() override;
-    
+
+    void setInput(std::vector<double> rpms) override;
 private:
     const int _MOTOR_NUM = 4;
     std::vector<Motor> _motor;

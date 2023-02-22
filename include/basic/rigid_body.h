@@ -1,13 +1,13 @@
 #pragma once
 #include <Eigen/Dense>
-#include <boost/array.hpp>
+#include <vector>
+
 #include "type.h"
+#include "ode.h"
 
 class RigidBody
 {
 public:
-    typedef boost::array<double, 18> InternalState;
-
     RigidBody() = default;
     RigidBody(double mass, Eigen::Matrix3d inertia):_mass(mass), _inertia(inertia)
     {}
@@ -15,11 +15,9 @@ public:
 
     virtual void computeTotalForce() = 0;
     virtual void computeTotalTorque() = 0;
-    void operator()(const RigidBody::InternalState& x,
-                    RigidBody::InternalState& dxdt, const double /* t */);
     
-    void updateInternalState();
-    void step(double dt);
+    void computeOnce();
+
     void setState(const State & state){ _state = state; }
 
     Eigen::Vector3d getPosition(){ return _state.position; }
@@ -46,5 +44,9 @@ protected:
     State _state;
 
 private:
-    InternalState _internal_state;
+    // used for ode
+    std::vector<double> computeDotState();
+    std::vector<double> transStateToOdeState();
+    void getStateFromOdeState();
+    Ode _ode_int;
 };

@@ -8,10 +8,15 @@ void Quadrotor::init(const std::string& config_path)
 
     _mass = config["mass"].as<double>();
     _inertia = Eigen::Map<Eigen::Matrix3d>(config["inertial"].as<std::vector<double>>().data());
+    _arm_length = config["arm_length"].as<double>();
 
     // initial motor
     double kf = config["kf"].as<double>();
     double km = config["km"].as<double>();
+
+    State initial_state;
+    initial_state.position = Eigen::Map<Eigen::Vector3d>(config["initial_position"].as<std::vector<double>>().data());
+
 
     for(int i=0; i<_MOTOR_NUM; i++)
     {
@@ -52,4 +57,12 @@ void Quadrotor::computeTotalTorque()
                     - _motor[2].getTorque() - _motor[3].getTorque();
 
   _total_torque = motor_torque + _external_torque;
+}
+
+void Quadrotor::setInput(std::vector<double> rpms)
+{
+  for (int i=0; i<_MOTOR_NUM; i++)
+  {
+    _motor[i].setRpm(rpms[i]);
+  }
 }

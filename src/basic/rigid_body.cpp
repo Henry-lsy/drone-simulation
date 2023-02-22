@@ -1,40 +1,15 @@
 #include <iostream>
 
-#include "boost/numeric/odeint.hpp"
-
 #include "rigid_body.h"
+
 namespace odeint = boost::numeric::odeint;
 
-void RigidBody::step(double dt)
+void RigidBody::computeOnce()
 {
-  auto save = _internal_state;
-
-  odeint::integrate(boost::ref(*this), _internal_state, 0.0, dt, dt);
-
-  for (int i = 0; i < 18; ++i)
-  {
-    if (std::isnan(_internal_state[i]))
-    {
-      std::cout << "dump " << i << " << pos ";
-      for (int j = 0; j < 22; ++j)
-      {
-        std::cout << save[j] << " ";
-      }
-      std::cout << std::endl;
-      _internal_state = save;
-      break;
-    }
-  }
-
-  for (int i = 0; i < 3; i++)
-  {
-    _state.position(i) = _internal_state[0 + i];
-    _state.velocity(i) = _internal_state[3 + i];
-    _state.R(i, 0) = _internal_state[6 + i];
-    _state.R(i, 1) = _internal_state[9 + i];
-    _state.R(i, 2) = _internal_state[12 + i];
-    _state.angular_velocity(i) = _internal_state[15 + i];
-  }
+  std::vector<double> initial_state = transStateToOdeState();
+  std::vector<double> dot_state = computeDotState();
+  _ode_int.compute(initial_state, dot_state);
+  getStateFromOdeState();
 
   // Re-orthonormalize R (polar decomposition)
   Eigen::LLT<Eigen::Matrix3d> llt(_state.R.transpose() * _state.R);
@@ -48,25 +23,42 @@ void RigidBody::step(double dt)
     _state.position(2) = 0;
     _state.velocity(2) = 0;
   }
-  updateInternalState();
 }
 
-void RigidBody::updateInternalState()
+void RigidBody::getStateFromOdeState()
 {
+  std::vector<double> x(18);
+  x = _ode_int.getInternalState();
+
   for (int i = 0; i < 3; i++)
   {
-    _internal_state[0 + i]  = _state.position(i);
-    _internal_state[3 + i]  = _state.velocity(i);
-    _internal_state[6 + i]  = _state.R(i, 0);
-    _internal_state[9 + i]  = _state.R(i, 1);
-    _internal_state[12 + i] = _state.R(i, 2);
-    _internal_state[15 + i] = _state.angular_velocity(i);
+    _state.position(i) = x[0 + i];
+    _state.velocity(i) = x[3 + i];
+    _state.R(i, 0) = x[6 + i];
+    _state.R(i, 1) = x[9 + i];
+    _state.R(i, 2) = x[12 + i];
+    _state.angular_velocity(i) = x[15 + i];
   }
 }
 
-void RigidBody::operator()(const RigidBody::InternalState& x,
-                               RigidBody::InternalState& dxdt, const double /* t */)
+std::vector<double> RigidBody::transStateToOdeState()
 {
+  std::vector<double> x(18);
+  for (int i = 0; i < 3; i++)
+  {
+    x[0 + i]  = _state.position(i);
+    x[3 + i]  = _state.velocity(i);
+    x[6 + i]  = _state.R(i, 0);
+    x[9 + i]  = _state.R(i, 1);
+    x[12 + i] = _state.R(i, 2);
+    x[15 + i] = _state.angular_velocity(i);
+  }
+  return x;
+}
+
+std::vector<double> RigidBody::computeDotState()
+{
+  std::vector<double> x = _ode_int.getInternalState();
   State cur_state;
   for (int i = 0; i < 3; i++)
   {
@@ -101,6 +93,7 @@ void RigidBody::operator()(const RigidBody::InternalState& x,
 
   angular_acceleration = _inertia.inverse() * (_total_torque - cur_state.angular_velocity.cross(_inertia * cur_state.angular_velocity));
 
+  std::vector<double> dxdt(18);
   for (int i = 0; i < 3; i++)
   {
     dxdt[0 + i]  = velocity(i);
@@ -117,4 +110,5 @@ void RigidBody::operator()(const RigidBody::InternalState& x,
       dxdt[i] = 0;
     }
   }
+  return dxdt;
 }

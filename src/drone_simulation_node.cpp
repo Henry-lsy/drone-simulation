@@ -10,9 +10,9 @@ int main(int argc, char ** argv)
     sim_manager_ros.initDrone("../config/quadrotor_param.yaml");
 
     while(ros::ok())
-    {
-        sim_manager_ros.process();
+    {   
         ros::spinOnce();
+        sim_manager_ros.process();
         loop_rate.sleep();
     }
 }

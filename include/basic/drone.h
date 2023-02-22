@@ -10,11 +10,23 @@ public:
     Drone() = default;
     virtual ~Drone() = default;
 
-    virtual void init(const std::string & config_path)
-    {}
+    virtual void init(const std::string & config_path){};
     
-    Imu getImu(){ return _imu; }
-    Odometry getOdom(){ return _odom; }
+    Imu getImu()
+    {   _imu.orientation = getQuaterniond();
+        _imu.angular_velocity = getAngularVelocity();
+        _imu.linear_acceleration = getAcceleration();
+        return _imu; 
+    }
+
+    Odometry getOdom()
+    {
+        _odom.position = getPosition();
+        _odom.velocity = getVelocity();
+        _odom.orientation = getQuaterniond();
+        _odom.angular_velocity = getAngularVelocity();
+        return _odom;
+    }
 
     void setExternalForce(Eigen::Vector3d external_force)
     {
@@ -36,8 +48,7 @@ public:
         _total_torque << 0, 0, 0;
     }
 
-    void setCmd();
-    void simulationOnce(){};
+    virtual void setInput(std::vector<double> input){}
 
 private:
     Imu _imu;
